@@ -88,7 +88,6 @@ void colorDepthImage(cv::Mat& imgDepth,
 // 由颜色名称和id获取r,g,b值
 bool colormap(const std::string& name,unsigned char idx,
 float& r,float& g, float& b);
-}
 
 // 计算直线或者圆周上的所有像素,bresenham算法
 std::vector<cv::Point2i> bresLine(int x0,int y0,int x1,int y1);
@@ -116,4 +115,6 @@ void UTMtoLL(
     const std::string& utmZone,
     double& latitude,double& longitude
 );
+}
+
 #endif
