@@ -63,6 +63,59 @@ public:
                                    const std::vector<cv::Point2f>& imagePoints,
                                    const cv::Mat& rvec,
                                    const cv::Mat& tvec) const;
+  // 像素坐标到相机坐标
+  virtual void liftSphere(const Eigen::Vector2d& p, Eigen::Vector3d& P) const = 0;
+  virtual void liftProjective(const Eigen::Vector2d& p, Eigen::Vector3d& P) const = 0;
+
+  // 空间点坐标到像素坐标
+  virtual void spaceToPlane(const Eigen::Vector3d& P, Eigen::Vector2d& p) const = 0;
+
+  virtual void undistToPlane(const Eigen::Vector2d& p_u, Eigen::Vector2d& p) const = 0;
+    //%output p
+
+    //virtual void initUndistortMap(cv::Mat& map1, cv::Mat& map2, double fScale = 1.0) const = 0;
+  virtual cv::Mat initUndistortRectifyMap(cv::Mat& map1, cv::Mat& map2,
+                                            float fx = -1.0f, float fy = -1.0f,
+                                            cv::Size imageSize = cv::Size(0, 0),
+                                            float cx = -1.0f, float cy = -1.0f,
+                                            cv::Mat rmat = cv::Mat::eye(3, 3, CV_32F)) const = 0;
+
+  virtual int parameterCount(void) const = 0;
+
+  virtual void readParameters(const std::vector<double>& parameters) = 0;
+  virtual void writeParameters(std::vector<double>& parameters) const = 0;
+
+  virtual void writeParametersToYamlFile(const std::string& filename) const = 0;
+
+  virtual std::string parametersToString(void) const = 0;
+
+
+  /**
+   * \brief Calculates the reprojection distance between points
+   *
+   * \param P1 first 3D point coordinates
+   * \param P2 second 3D point coordinates
+   * \return euclidean distance in the plane
+   **/
+  double reprojectionDist(const Eigen::Vector3d& P1, const Eigen::Vector3d& P2) const;
+
+  double reprojectionError(const std::vector< std::vector<cv::Point3f> >& objectPoints,
+                             const std::vector< std::vector<cv::Point2f> >& imagePoints,
+                             const std::vector<cv::Mat>& rvecs,
+                             const std::vector<cv::Mat>& tvecs,
+                             cv::OutputArray perViewErrors = cv::noArray()) const;
+
+  double reprojectionError(const Eigen::Vector3d& P,
+                             const Eigen::Quaterniond& camera_q,
+                             const Eigen::Vector3d& camera_t,
+                             const Eigen::Vector2d& observed_p) const;
+
+  void projectPoints(const std::vector<cv::Point3f>& objectPoints,
+                       const cv::Mat& rvec,
+                       const cv::Mat& tvec,
+                       std::vector<cv::Point2f>& imagePoints) const;
+protected:
+    cv::Mat m_mask;
 };
 
 typedef boost::shared_ptr<Camera> CameraPtr;
