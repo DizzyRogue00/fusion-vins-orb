@@ -505,6 +505,44 @@ void CameraCalibration::optimize(CameraPtr& camera,
                                  transformVec.at(i).rotationData(), // 旋转（四元数）
                                  transformVec.at(i).translationData()); // 平移
             }
+        
+        ceres::Manifold* quaternion_manifold = new ceres::EigenQuaternionManifold;
+        problem.SetManifold(transformVec.at(i).rotationData(), quaternion_manifold);
+    }
+
+    std::cout << "begin ceres" << std::endl;
+    ceres::Solver::Options options;
+    options.max_num_iterations = 1000;
+    options.num_threads = 1;
+
+    if (m_verbose)
+    {
+        options.minimizer_progress_to_stdout = true;
+    }
+
+    ceres::Solver::Summary summary;
+    ceres::Solve(options, &problem, &summary);
+    std::cout << "end ceres" << std::endl;
+
+    if (m_verbose)
+    {
+        std::cout << summary.FullReport() << std::endl;
+    }
+
+    // 将优化后的内参写回相机对象
+    camera->readParameters(intrinsicCameraParams);
+
+    for (size_t i = 0; i < rvecs.size(); ++i)
+    {
+        Eigen::AngleAxisd aa(transformVec.at(i).rotation());
+
+        Eigen::Vector3d rvec = aa.angle() * aa.axis();
+        cv::eigen2cv(rvec, rvecs.at(i));
+
+        cv::Mat& tvec = tvecs.at(i);
+        tvec.at<double>(0) = transformVec.at(i).translation()(0);
+        tvec.at<double>(1) = transformVec.at(i).translation()(1);
+        tvec.at<double>(2) = transformVec.at(i).translation()(2);
     }
 }
 
