@@ -37,15 +37,15 @@ public:
         double& u0(void); // 光心坐标
         double& v0(void);
 
-        double& xi(void) const; // 镜面参数
-        double& k1(void) const; // 径向畸变
-        double& k2(void) const;   
-        double& p1(void) const;
-        double& p2(void) const; // 切向畸变
-        double& gamma1(void) const; // 焦距参数，等效 fx，fy
-        double& gamma2(void) const;
-        double& u0(void) const; // 光心坐标
-        double& v0(void) const;
+        double xi(void) const; // 镜面参数
+        double k1(void) const; // 径向畸变
+        double k2(void) const;   
+        double p1(void) const;
+        double p2(void) const; // 切向畸变
+        double gamma1(void) const; // 焦距参数，等效 fx，fy
+        double gamma2(void) const;
+        double u0(void) const; // 光心坐标
+        double v0(void) const;
 
         bool readFromYamlFile(const std::string& filename);
         void writeToYamlFile(const std::string& filename) const; 

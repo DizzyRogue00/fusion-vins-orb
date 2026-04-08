@@ -1,7 +1,5 @@
 #include "cameraModelCal/calib/CameraCalibration.h"
 
-#include "camodocal/calib/CameraCalibration.h"
-
 #include <cstdio>
 #include <eigen3/Eigen/Dense>
 #include <iomanip>

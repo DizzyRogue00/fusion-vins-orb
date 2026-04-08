@@ -24,6 +24,8 @@ public:
   {
   public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    Parameters(ModelType modelType);
+    
     Parameters(ModelType modelType,const std::string& cameraName, int w, int h);
  
     ModelType& modelType(void);
@@ -46,20 +48,20 @@ public:
     int m_nIntrinsics;
     std::string m_cameraName;
     int m_imageWidth, m_imageHeight;
-    };
+  };
 
-    virtual ModelType modelType(void) const = 0;
-    virtual const std::string& cameraName(void) const = 0;
-    virtual int imageWidth(void) const = 0;
-    virtual int imageHeight(void) const = 0;
+  virtual ModelType modelType(void) const = 0;
+  virtual const std::string& cameraName(void) const = 0;
+  virtual int imageWidth(void) const = 0;
+  virtual int imageHeight(void) const = 0;
 
-    virtual cv::Mat& mask(void);
-    virtual const cv::Mat& mask(void) const;
+  virtual cv::Mat& mask(void);
+  virtual const cv::Mat& mask(void) const;
 
-    virtual void estimateIntrinsic(const cv::Size& boardSize,
+  virtual void estimateIntrinsic(const cv::Size& boardSize,
                                    const std::vector<std::vector<cv::Point3f>>& objectPoints,
                                    const std::vector<std::vector<cv::Point2f>>& imagePoints)=0;
-    virtual void estimateExtrinsic(const std::vector<cv::Point3f>& objectPoints,
+  virtual void estimateExtrinsic(const std::vector<cv::Point3f>& objectPoints,
                                    const std::vector<cv::Point2f>& imagePoints,
                                    const cv::Mat& rvec,
                                    const cv::Mat& tvec) const;
@@ -115,7 +117,7 @@ public:
                        const cv::Mat& tvec,
                        std::vector<cv::Point2f>& imagePoints) const;
 protected:
-    cv::Mat m_mask;
+  cv::Mat m_mask;
 };
 
 typedef boost::shared_ptr<Camera> CameraPtr;
